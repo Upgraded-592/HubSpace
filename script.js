@@ -1,12 +1,13 @@
-/* ELEMENTS */
+/* ================= ELEMENTS ================= */
 const sendBtn = document.getElementById("sendBtn");
 const messageInput = document.getElementById("messageInput");
 const addHubBtn = document.getElementById("addHubBtn");
 const newHubInput = document.getElementById("newHubInput");
 const addSpaceBtn = document.getElementById("addSpaceBtn");
 const newSpaceInput = document.getElementById("newSpaceInput");
+const hubList = document.getElementById("hubList");
 
-/* DATA */
+/* ================= DATA ================= */
 const STORAGE_KEY = "hubspaces-data";
 let hubs = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
   Discord: [
@@ -31,49 +32,17 @@ let hubs = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
 let currentHub = "Discord";
 let currentSpace = null;
 
-/* INIT APP */
+/* ================= INIT ================= */
 document.getElementById("app").classList.remove("hidden");
 
-/* HUBS */
-/*New hub*/
-function addHub() {
-  const hubName = newHubInput.value.trim();
-  if (!hubName) return; // ignore empty input
-  if (hubs[hubName]) {
-    alert("Platform already exists!");
-    return;
-  }
-
-  hubs[hubName] = []; // start with no spaces
-  save();             // save to localStorage
-  renderHubs();       // update the hub list
-  newHubInput.value = ""; // clear input
+/* ================= SAVE ================= */
+function save() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(hubs));
 }
 
-const hubList = document.getElementById("hubList");
-Object.keys(hubs).forEach(hub => {
-  const div = document.createElement("div");
-  div.className = "hub";
-  div.textContent = hub;
-  div.onclick = (e) => selectHub(hub, e);
-  hubList.appendChild(div);
-});
-
-function selectHub(hub, event) {
-  currentHub = hub;
-  currentSpace = null;
-  document.querySelectorAll(".hub").forEach(h => h.classList.remove("active"));
-  event.target.classList.add("active");
-  renderSpaces();
-}
-
-addHubBtn.onclick = addHub;
-
-newHubInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") addHub();
-});
+/* ================= HUBS ================= */
 function renderHubs() {
-  hubList.innerHTML = ""; // clear old list
+  hubList.innerHTML = "";
   Object.keys(hubs).forEach(hub => {
     const div = document.createElement("div");
     div.className = "hub";
@@ -83,7 +52,33 @@ function renderHubs() {
   });
 }
 
-/* SPACES */
+function selectHub(hub, event) {
+  currentHub = hub;
+  currentSpace = null;
+  document.querySelectorAll(".hub").forEach(h => h.classList.remove("active"));
+  event.target.classList.add("active");
+  renderSpaces();
+}
+
+function addHub() {
+  const hubName = newHubInput.value.trim();
+  if (!hubName) return;
+  if (hubs[hubName]) {
+    alert("Platform already exists!");
+    return;
+  }
+  hubs[hubName] = [];
+  save();
+  renderHubs();
+  newHubInput.value = "";
+}
+
+addHubBtn.onclick = addHub;
+newHubInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") addHub();
+});
+
+/* ================= SPACES ================= */
 function renderSpaces() {
   const list = document.getElementById("spaceList");
   list.innerHTML = "";
@@ -98,8 +93,9 @@ function renderSpaces() {
     div.onclick = () => openSpace(space, div);
     list.appendChild(div);
   });
-  /**/
-  function addSpace() {
+}
+
+function addSpace() {
   if (!currentHub) {
     alert("Select a hub first!");
     return;
@@ -108,35 +104,31 @@ function renderSpaces() {
   const spaceName = newSpaceInput.value.trim();
   if (!spaceName) return;
 
-  // Check if space already exists in this hub
   if (hubs[currentHub].some(space => space.name === spaceName)) {
     alert("This space already exists!");
     return;
   }
 
-  // Add new space
   hubs[currentHub].push({
     name: spaceName,
     messages: []
   });
 
-  save();           // save to localStorage
-  renderSpaces();   // update space list
-  newSpaceInput.value = ""; // clear input
+  save();
+  renderSpaces();
+  newSpaceInput.value = "";
 }
-}
-addSpaceBtn.onclick = addSpace;
 
+addSpaceBtn.onclick = addSpace;
 newSpaceInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") addSpace();
 });
 
-/* CHAT */
+/* ================= CHAT ================= */
 function openSpace(space, el) {
   currentSpace = space;
   document.querySelectorAll(".space").forEach(s => s.classList.remove("active"));
   el.classList.add("active");
-
   document.getElementById("chatHeader").textContent = space.name;
   renderMessages();
 }
@@ -153,9 +145,9 @@ function renderMessages() {
   msgBox.scrollTop = msgBox.scrollHeight;
 }
 
-/* SEND */
+/* ================= SEND MESSAGES ================= */
 sendBtn.onclick = () => {
-  if (!currentSpace || !messageInput.value) return;
+  if (!currentSpace || !messageInput.value.trim()) return;
 
   currentSpace.messages.push({
     text: messageInput.value,
@@ -165,12 +157,12 @@ sendBtn.onclick = () => {
   save();
   messageInput.value = "";
   renderMessages();
-};
-
-/* SAVE */
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(hubs));
 }
 
-/* START */
+messageInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") sendBtn.click();
+});
+
+/* ================= START ================= */
+renderHubs();
 selectHub("Discord");
