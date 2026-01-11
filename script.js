@@ -1,6 +1,8 @@
 /* ELEMENTS */
 const sendBtn = document.getElementById("sendBtn");
 const messageInput = document.getElementById("messageInput");
+const addHubBtn = document.getElementById("addHubBtn");
+const newHubInput = document.getElementById("newHubInput");
 
 /* DATA */
 const STORAGE_KEY = "hubspaces-data";
@@ -31,6 +33,21 @@ let currentSpace = null;
 document.getElementById("app").classList.remove("hidden");
 
 /* HUBS */
+/*New hub*/
+function addHub() {
+  const hubName = newHubInput.value.trim();
+  if (!hubName) return; // ignore empty input
+  if (hubs[hubName]) {
+    alert("Platform already exists!");
+    return;
+  }
+
+  hubs[hubName] = []; // start with no spaces
+  save();             // save to localStorage
+  renderHubs();       // update the hub list
+  newHubInput.value = ""; // clear input
+}
+
 const hubList = document.getElementById("hubList");
 Object.keys(hubs).forEach(hub => {
   const div = document.createElement("div");
@@ -46,6 +63,22 @@ function selectHub(hub, event) {
   document.querySelectorAll(".hub").forEach(h => h.classList.remove("active"));
   event.target.classList.add("active");
   renderSpaces();
+}
+
+addHubBtn.onclick = addHub;
+
+newHubInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") addHub();
+});
+function renderHubs() {
+  hubList.innerHTML = ""; // clear old list
+  Object.keys(hubs).forEach(hub => {
+    const div = document.createElement("div");
+    div.className = "hub";
+    div.textContent = hub;
+    div.onclick = (e) => selectHub(hub, e);
+    hubList.appendChild(div);
+  });
 }
 
 /* SPACES */
