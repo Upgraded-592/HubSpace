@@ -3,6 +3,8 @@ const sendBtn = document.getElementById("sendBtn");
 const messageInput = document.getElementById("messageInput");
 const addHubBtn = document.getElementById("addHubBtn");
 const newHubInput = document.getElementById("newHubInput");
+const addSpaceBtn = document.getElementById("addSpaceBtn");
+const newSpaceInput = document.getElementById("newSpaceInput");
 
 /* DATA */
 const STORAGE_KEY = "hubspaces-data";
@@ -96,7 +98,38 @@ function renderSpaces() {
     div.onclick = () => openSpace(space, div);
     list.appendChild(div);
   });
+  /**/
+  function addSpace() {
+  if (!currentHub) {
+    alert("Select a hub first!");
+    return;
+  }
+
+  const spaceName = newSpaceInput.value.trim();
+  if (!spaceName) return;
+
+  // Check if space already exists in this hub
+  if (hubs[currentHub].some(space => space.name === spaceName)) {
+    alert("This space already exists!");
+    return;
+  }
+
+  // Add new space
+  hubs[currentHub].push({
+    name: spaceName,
+    messages: []
+  });
+
+  save();           // save to localStorage
+  renderSpaces();   // update space list
+  newSpaceInput.value = ""; // clear input
 }
+}
+addSpaceBtn.onclick = addSpace;
+
+newSpaceInput.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") addSpace();
+});
 
 /* CHAT */
 function openSpace(space, el) {
