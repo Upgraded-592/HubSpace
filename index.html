@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>HubSpaces</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div id="loginScreen" class="login">
+<h1>HubSpaces</h1>
+<input id="passwordInput" type="password" placeholder="Password" />
+<button id="loginBtn">Enter</button>
+<p id="loginError"></p>
+</div>
+
+<div id="app" class="hidden">
+
+<!-- LEFT: HUBS -->
+<aside class="sidebar">
+<h2>Hubs</h2>
+<div id="hubList"></div>
+</aside>
+
+<!-- MIDDLE: SPACES -->
+<section class="spaces">
+<div class="spaces-header">
+<h2>Conversations</h2>
+<input placeholder="Search spaces..." />
+</div>
+<div id="spaceList"></div>
+</section>
+
+<!-- RIGHT: CHAT -->
+<section class="chat">
+<div id="chatHeader" class="chat-header">Select a space</div>
+<div id="messages" class="messages"></div>
+
+<div class="chat-input">
+<input id="messageInput" placeholder="Type a message..." />
+<button id="sendBtn">➤</button>
+</div>
+</section>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
