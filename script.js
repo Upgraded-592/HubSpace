@@ -6,6 +6,17 @@ const newHubInput = document.getElementById("newHubInput");
 const addSpaceBtn = document.getElementById("addSpaceBtn");
 const newSpaceInput = document.getElementById("newSpaceInput");
 const hubList = document.getElementById("hubList");
+/*==================SETTINGS====================*/
+const settings = document.getElementById("settings");
+const settingsToggle = document.getElementById("settingsToggle");
+
+settingsToggle.onclick = () => {
+  settings.classList.toggle("show");
+};
+ else {
+    settings.style.display = "none";
+  }
+};
 
 /* ================= DATA ================= */
 const STORAGE_KEY = "hubspaces-data";
