@@ -9,41 +9,6 @@ background: #0f1115;
 color: #fff;
 }
 
-/* LOGIN */
-.login {
-height: 100vh;
-display: flex;
-flex-direction: column;
-justify-content: center;
-align-items: center;
-gap: 12px;
-}
-
-.login input {
-padding: 10px;
-border-radius: 6px;
-border: none;
-width: 220px;
-}
-
-.login button {
-padding: 10px 25px;
-border: none;
-border-radius: 6px;
-background: #3b82f6;
-color: white;
-font-weight: 600;
-cursor: pointer;
-}
-
-#loginError {
-color: #f87171;
-}
-
-.hidden {
-display: none;
-}
-
 /* APP LAYOUT */
 #app {
 display: grid;
